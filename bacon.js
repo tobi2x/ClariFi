@@ -10,7 +10,7 @@ const apiKey1 = "";
 const openai1 = new OpenAI({ apiKey: apiKey1 })
 
 app.use(express.json());
-app.use(express.static('GOOGLEHACK'));
+app.use(express.static('ClariFi'));
 app.use(cors());
 app.post('/get-gptResponse', async(req, res) => {
     const { prompt } = req.body;
