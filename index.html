@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>ClariFi</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Protest+Strike&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Francois+One&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="header">
+        <h1 class="title" style="font-size: 54px;">ClariFi</h1>
+        <h2 class="subheading" style="font-size: 32px;">Clarifying Files - Legal Document Translator and Simplifier</h2>
+        <!-- Clarifying with Foreign Intelligence -->
+    </div>
+
+    <div  class="flex-container" style="align-items:flex-start; justify-content: space-between;">
+        <div class="scrollmenu active" id="language-buttons">
+            <ul>
+                <li>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="flex-container" style="padding: 15px; flex: 2 1; justify-content: space-between;">
+        <!-- upload document -->
+        <div>
+            <div class="flex-container">
+                <form id="uploadForm">
+                    <input type="file" id="myFile" name="filename">
+                    <input id="colorChangeButton" class="button" type="submit" value="Simplify">
+                </form>
+                <img style="height: 60px; width: 60px;" src="./assets/upload1-icon_1.svg" alt="up arrow on a document icon">
+            </div>
+            <!-- output -->
+            <div>
+                <p id="name" class="changeMe name text-primary text-center lato-bold">Output:</p>
+                <div id="gptResponse"><!-- OCR or backend response will be displayed here --></div>
+                <!-- <div class="changeMe name text-primary lato-regular" id="gptResponse name">OCR or backend response will be displayed here</div> -->
+            </div>
+            <div>
+                <p class="lato-bold">Input Text</p>
+                <textarea id="fromText" class="fromText" style="width: 1090px; height:160px" placeholder="Input Text"></textarea>
+                <p class="lato-bold">Output Text</p>
+                <textarea id="toTranslate" class="toTranslate" style="width: 1090px; height:160px" placeholder="Ouput Text"></textarea>
+            </div>
+        </div>
+    
+        <div class="display">
+            <div class="flex-container lato-bold" style="justify-content: flex-end; align-items: center;">
+                <h2>Display Settings</h2>
+                <img src="./assets/gear-icon.svg" alt="sun symbol" class="icon" style="padding-left: 10px;">
+            </div>
+            <!-- light and dark mode -->
+            <div style="padding-top: 20px; padding-left: 20px;" class="flex-container">
+                <p id="name" class="changeMe name text-primary text-center lato-bold">Light Mode</p>
+                <img src="./assets/light-mode.svg" alt="sun symbol" class="icon">
+                <label class="switch">
+                    <input type="checkbox" id="modeSwitch">
+                    <span onclick="backgroundColor()" class="slider round"></span>
+                </label>
+                <img src="./assets/dark-mode.svg" alt="moon symbol" style="height:40px; width:40px">
+                <p id="name" class="changeMe name text-primary text-center lato-bold" style="padding-left: 10px">Dark Mode</p>
+            </div>
+            <!-- increase text size -->
+                <div style="justify-content: flex-end; align-items:center; padding-left: 20px;" class="flex-container">
+                    <p class="lato-bold" style="font-size: 16">small</p>
+                    <input class="none" type="range" min="16" max="60" value="0" id="slider" step="1">
+                    <p class="lato-bold" style="font-size: xx-large; padding-left: 10px;">Large</p>
+                </div>
+                <!-- <h1 style= "padding-left:20px;" id="name" class="changeMe name text-primary text-center lato-bold">Text Size</h1> -->
+        </div>
+    </div>
+
+    
+    <script src="./script.js"></script>
+    <script src="./bacon.js"></script>
+    <script src="./translate.js"></script>
+    <script src="./language.js"></script>
+    <!-- <script src="./backend.js"></script> -->
+
+    <!--Jquery code-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src = "https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1"></script>
+    <script>
+        $(document).ready(function() {
+            $("#uploadForm").on('submit', function(event) {
+                event.preventDefault();
+                var file = $("#myFile").prop('files')[0]; 
+                console.log("Got file")
+                if (file) {
+                    Tesseract.recognize(
+                        file,
+                        'eng',
+                        { logger: m => console.log(m) }
+                    ).then(function({ data: { text } }) {
+                        console.log("Got text");
+                        console.log(text);
+                        
+                        $.ajax({
+                            url: 'http://localhost:5500/get-gptResponse',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ prompt: text }), 
+                            success: function(response) {
+                                console.log(response);
+                                $("#gptResponse").text(response.message); 
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error: " + status + " " + error);
+                            }
+                        });
+                    });
+                } else {
+                    alert("Please upload a file first.");
+                }
+            });
+        });
+        </script>
+</body>
+</html>
