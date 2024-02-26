@@ -22,10 +22,10 @@ Our objective is clear: to make legal documents comprehensible for everyone. We 
 ClariFi simplifies the process of understanding legal documents by translating and simplifying the content. Users can easily upload documents and choose their preferred settings for a personalized experience.
 
 # **Accommodations**
-Adjustable text size.
-Light and dark mode for comfortable reading.
-Language accessibility through comprehensive translation features.
-Easily readable fonts and simple, intuitive images designed for all ages.
+Adjustable text size.  
+Light and dark mode for comfortable reading.  
+Language accessibility through comprehensive translation features.  
+Easily readable fonts and simple, intuitive images designed for all ages.  
 
 # “THE LIMITS OF MY LANGUAGE MEAN THE LIMITS OF MY WORLD” — Ludwig Wittgenstein
 
