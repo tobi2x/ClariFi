@@ -1,4 +1,4 @@
-# Clarifi
+# ClariFi
 # Clarifying Files - Legal Document Translator and Simplifier
 
 # **Overview**
